@@ -31,8 +31,8 @@ public class Profile_image_service {
         if (!file.isEmpty()) {
             final String suffix =file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String filename =user_id+suffix;
-            String fullPath = uploadDir +sep+"lunch"+sep+ filename;
-            String DBPath= DB_res+sepD+"lunch"+sepD+filename;
+            String fullPath = uploadDir +sep+"profile"+sep+ filename;
+            String DBPath= DB_res+sepD+"profile"+sepD+filename;
 
             //멀티파트로 받은 변수를 로컬 경로에 저장
             if(file != null) {
@@ -52,7 +52,7 @@ public class Profile_image_service {
 
                 //마지막 인덱스값 구해옴
                 int idx;
-                ResultSet rs =con.createStatement().executeQuery("SELECT index FROM profile_images ORDER BY id DESC LIMIT 1;");
+                ResultSet rs =con.createStatement().executeQuery("SELECT index FROM profile_images ORDER BY index DESC LIMIT 1;");
                 rs.next();
                 try{
                     idx = rs.getInt("index");
@@ -60,14 +60,14 @@ public class Profile_image_service {
                     idx = 0;
                 }
                 //경로 저장
-                String query = String.format("SELECT * FROM profile_images where uploader_user_id='%s';",true,user_id);
+                String query = String.format("SELECT * FROM profile_images where owners_user_id='%s';",true,user_id);
                 ResultSet rs2 =con.createStatement().executeQuery(query);
                 if(rs2.next()){
                     //DB에 값이 이미 들어있는 경우 - 수정
                     con.createStatement().execute(String.format("update profile_images set Path='%s' uploader_user_id='%s';",DBPath,user_id));
                 }else{
                     //DB에 데이터 자체가 없는 경우 - 열 추가
-                    con.createStatement().execute(String.format("insert profile_images (index, uploader_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,user_id,DBPath,now_date_time));
+                    con.createStatement().execute(String.format("insert profile_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,user_id,DBPath,now_date_time));
                 }
                 con.close();
             }catch (Exception e){
@@ -85,7 +85,7 @@ public class Profile_image_service {
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
 
-            String query = String.format("SELECT * FROM profile_images and uploader_user_id='%s';",true,user_id);
+            String query = String.format("SELECT * FROM profile_images and owners_user_id='%s';",true,user_id);
             ResultSet rs =con.createStatement().executeQuery(query);
             if (rs.next()){
                 filePath=rs.getString("path");
