@@ -5,6 +5,8 @@ public class Image {
     private String uploader_user_id;
     private String Path;
     private String uploaded_date_time;
+    private boolean is_profile;
+
 
     public int getMy_index() {
         return my_index;
@@ -37,4 +39,11 @@ public class Image {
     public void setUploaded_date_time(String uploaded_date_time) {
         this.uploaded_date_time = uploaded_date_time;
     }
+    public boolean isIs_profile() {
+        return is_profile;
+    }
+    public void setIs_profile(boolean is_profile) {
+        this.is_profile = is_profile;
+    }
+
 }
