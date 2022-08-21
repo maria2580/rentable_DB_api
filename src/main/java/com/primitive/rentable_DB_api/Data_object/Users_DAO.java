@@ -1,4 +1,4 @@
-package com.primitive.rentable_DB_api.DAO;
+package com.primitive.rentable_DB_api.Data_object;
 
 public class Users_DAO {
     private User_DTO[] users;

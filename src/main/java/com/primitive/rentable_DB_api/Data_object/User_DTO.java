@@ -1,4 +1,4 @@
-package com.primitive.rentable_DB_api.DAO;
+package com.primitive.rentable_DB_api.Data_object;
 
 public class User_DTO {
     private int my_index;

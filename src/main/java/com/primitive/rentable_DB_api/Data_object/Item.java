@@ -1,10 +1,12 @@
-package com.primitive.rentable_DB_api.DAO;
+package com.primitive.rentable_DB_api.Data_object;
 
 public class Item {
     private int my_index;
     private String owners_id;
+    private String title;
+    private String content;
     private String uploaded_date_time;
-    private boolean is_deleted;
+    private boolean deleted;
     private String reservation_table_name;
     private String comments_table_name;
     private String review_table_name;
@@ -25,6 +27,22 @@ public class Item {
         this.owners_id = owners_id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getUploaded_date_time() {
         return uploaded_date_time;
     }
@@ -33,12 +51,12 @@ public class Item {
         this.uploaded_date_time = uploaded_date_time;
     }
 
-    public boolean isIs_deleted() {
-        return is_deleted;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setIs_deleted(boolean is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getReservation_table_name() {
