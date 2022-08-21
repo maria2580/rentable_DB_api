@@ -2,6 +2,7 @@ package com.primitive.rentable_DB_api.Srvieces;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
 import org.apache.commons.io.IOUtils;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 
 public class Item_image_service {
@@ -22,7 +24,40 @@ public class Item_image_service {
     private final String uploadDir = (osName.contains("win")?"D:\\rentable_images\\images":"/home/ubuntu/rentable_images/images");//sep 이 / 인 경우 리눅스이며 구분자 중복 필요 없음
     private final String DB_res = (osName.contains("win")?"D:\\\\rentable_images\\\\images":"/home/ubuntu/rentable_images/images");
 
+    public String get_item_image(String item_index,int a) throws IOException {
 
+        String filePath = null;//DB에서 받아온 경로가 저장될 변수
+        FileInputStream in=null;//로컬에서 읽은 파일이 들어오는 변수
+        //DB에서 경로 조회
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
+            con.createStatement().execute("use " + key.getDBname());
+
+            String query = String.format("SELECT * FROM item_images where related_item_index =%d ORDER BY index DESC LIMIT 1;",true,item_index);
+            ResultSet rs =con.createStatement().executeQuery(query);
+            if (rs.next()){
+                filePath=rs.getString("path");
+            }
+            con.close();
+            if (filePath==null){
+                filePath=uploadDir+sep+"no_image.png";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            in = new FileInputStream(filePath);
+        }catch (Exception e){
+            in = new FileInputStream(uploadDir+sep+"no_image.png");//Todo 서버 쪽에 dir이랑 no_image 미리 만들어 놓기
+        }
+
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encoded_image= encoder.encodeToString(IOUtils.toByteArray(in));
+
+        return encoded_image;
+    }
 
     public void post_item_image(String related_item_index, MultipartFile[] file){
         long now = System.currentTimeMillis();
@@ -53,7 +88,7 @@ public class Item_image_service {
 
                     //마지막 인덱스값 구해옴
                     int idx;
-                    ResultSet rs =con.createStatement().executeQuery("SELECT index FROM item_images ORDER BY id DESC LIMIT 1;");
+                    ResultSet rs =con.createStatement().executeQuery("SELECT index FROM item_images ORDER BY index DESC LIMIT 1;");
                     rs.next();
                     try{
                         idx = rs.getInt("index");
@@ -61,14 +96,14 @@ public class Item_image_service {
                         idx = 0;
                     }
                     //경로 저장
-                    String query = String.format("SELECT * FROM item_images where uploader_user_id='%s';",true,related_item_index);
+                    String query = String.format("SELECT * FROM item_images where related_item_index=%d;",true,related_item_index);
                     ResultSet rs2 =con.createStatement().executeQuery(query);
                     if(rs2.next()){
                         //DB에 값이 이미 들어있는 경우 - 수정
-                        con.createStatement().execute(String.format("update item_images set Path='%s' uploader_user_id='%s';",DBPath,related_item_index));
+                        con.createStatement().execute(String.format("update item_images set Path='%s' owners_user_id='%s';",DBPath,related_item_index));//Todo 5장올린사진 -> 4장으로 변경하는등의 동작은 따로 업데이트 메서드 만들어야함
                     }else{
                         //DB에 데이터 자체가 없는 경우 - 열 추가
-                        con.createStatement().execute(String.format("insert item_images (index, uploader_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,related_item_index,DBPath,now_date_time));
+                        con.createStatement().execute(String.format("insert item_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,related_item_index,DBPath,now_date_time));
                     }
                     con.close();
                 }catch (Exception e){
@@ -78,37 +113,7 @@ public class Item_image_service {
         }
 
     }
-    public byte[] get_item_image(String item_index,int a) throws IOException {
 
-        String filePath = null;//DB에서 받아온 경로가 저장될 변수
-        FileInputStream in=null;//로컬에서 읽은 파일이 들어오는 변수
-        //DB에서 경로 조회
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
-            con.createStatement().execute("use " + key.getDBname());
-
-            String query = String.format("SELECT * FROM item_images index ='%s';",true,item_index);
-            ResultSet rs =con.createStatement().executeQuery(query);
-            if (rs.next()){
-                filePath=rs.getString("path");
-            }
-            con.close();
-            if (filePath==null){
-                filePath=uploadDir+sep+"no_image.png";
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        try{
-            in = new FileInputStream(filePath);
-        }catch (Exception e){
-            in = new FileInputStream(uploadDir+sep+"no_image.png");//Todo 서버 쪽에 dir이랑 no_image 미리 만들어 놓기
-        }
-
-        return IOUtils.toByteArray(in);
-    }
 
 
 
