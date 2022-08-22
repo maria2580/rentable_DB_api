@@ -23,7 +23,7 @@ public class Test_Controller {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use "+key.getDBname());//Todo 유저아이디 길이제한 (영어)20자  이름 길이제한 한글10자  닉네임 길이제한 한글(2바이트)10자  주소지 길이제한 한글60자 전화번호 길이제한 14자 - 기호 제외 +8210xxxxyyyy 로 저장
-            con.createStatement().execute("create table if not exists items_uploaded (index int, owners_user_id varchar(20),title varchar(80),content text,appended_image_count int, uploaded_date_time varchar(20), is_deleted boolean, reservation_table_name varchar(50), comment_table_name varchar(50), reviews_table_name varchar(50));");
+            con.createStatement().execute("create table if not exists items_uploaded (index int, owners_user_id varchar(20),uploaded_date_time varchar(20), title varchar(80),content text,appended_image_count int, is_deleted boolean, reservation_table_name varchar(50), comment_table_name varchar(50), reviews_table_name varchar(50));");
             con.createStatement().execute("create table if not exists users (index int, user_id varchar(20), name varchar(20), nickname varchar(20), Address varchar(120), tel varchhar(28),phone_num varchar(28));");
             con.createStatement().execute("create table if not exists profile_images (index int, owners_user_id varchar(20), Path varchar(200), uploaded_date_time varchar(20));");
             con.createStatement().execute("create table if not exists item_images (index int, related_item_index int, Path varchar(200), uploaded_date_time varchar(20));");

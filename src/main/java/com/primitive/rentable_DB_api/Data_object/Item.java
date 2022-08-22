@@ -3,9 +3,9 @@ package com.primitive.rentable_DB_api.Data_object;
 public class Item {
     private int my_index;
     private String owners_user_id;
+    private String uploaded_date_time;
     private String title;
     private String content;
-    private String uploaded_date_time;
     private boolean deleted;
     private String reservation_table_name;
     private String comments_table_name;
