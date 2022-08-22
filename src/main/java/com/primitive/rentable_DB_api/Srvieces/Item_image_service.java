@@ -114,7 +114,7 @@ public class Item_image_service {
                         con.createStatement().execute(String.format("update item_images set Path='%s' where related_item_index='%s';",DBPath,related_item_index));//Todo 5장올린사진 -> 4장으로 변경하는등의 동작은 따로 업데이트 메서드 만들어야함
                     }else{
                         //DB에 데이터 자체가 없는 경우 - 열 추가
-                        con.createStatement().execute(String.format("insert item_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s','%s');",idx+1,related_item_index,DBPath,now_date_time));
+                        con.createStatement().execute(String.format("insert item_images (index, owners_user_id, path, uploaded_date_time) values(%d,'%s','%s','%s');",idx+1,related_item_index,DBPath,now_date_time));
                     }
                     con.close();
                 }catch (Exception e){

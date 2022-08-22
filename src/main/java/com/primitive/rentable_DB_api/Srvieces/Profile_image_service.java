@@ -77,7 +77,7 @@ public class Profile_image_service {
                     con.createStatement().execute(String.format("update profile_images set Path='%s' uploader_user_id='%s';",DBPath,user_id));
                 }else{
                     //DB에 데이터 자체가 없는 경우 - 열 추가
-                    con.createStatement().execute(String.format("insert profile_images (idx, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,user_id,DBPath,now_date_time));
+                    con.createStatement().execute(String.format("insert profile_images (idx, owners_user_id, path, uploaded_date_time) values(%d,'%s','%s');",idx+1,user_id,DBPath,now_date_time));
                 }
                 con.close();
             }catch (Exception e){
