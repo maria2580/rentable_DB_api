@@ -16,7 +16,7 @@ public class profile_Image_controller {
 
 
     @GetMapping( value = "images/profile/{user_id}", produces = MediaType.IMAGE_JPEG_VALUE )
-    public byte[] get_profile_image(@PathVariable String user_id) throws IOException {
+    public String get_profile_image(@PathVariable String user_id) throws IOException {
         return profile_image_service.get_profile_image(user_id);
     }
     @PostMapping("add/images/profile/{user_id}")//@modelattribute("key")

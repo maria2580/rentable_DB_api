@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 
 public class Profile_image_service {
@@ -75,7 +76,7 @@ public class Profile_image_service {
             }
         }
     }
-    public byte[] get_profile_image(String user_id) throws IOException {
+    public String get_profile_image(String user_id) throws IOException {
 
         String filePath = null;//DB에서 받아온 경로가 저장될 변수
         FileInputStream in=null;//로컬에서 읽은 파일이 들어오는 변수
@@ -103,8 +104,10 @@ public class Profile_image_service {
         }catch (Exception e){
             in = new FileInputStream(uploadDir+sep+"no_image.png");//Todo 서버 쪽에 dir이랑 no_image 미리 만들어 놓기
         }
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encoded_image= encoder.encodeToString(IOUtils.toByteArray(in));
 
-        return IOUtils.toByteArray(in);
+        return encoded_image;
     }
 
 
