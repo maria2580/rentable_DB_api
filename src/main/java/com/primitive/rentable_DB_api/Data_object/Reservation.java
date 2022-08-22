@@ -2,7 +2,7 @@ package com.primitive.rentable_DB_api.Data_object;
 
 public class Reservation {
     private int my_index;
-    private String customer_user_ID;
+    private String customer_user_index;
     private String start_date_time;
     private String end_date_time;
     private String where_to_brought;
@@ -19,12 +19,12 @@ public class Reservation {
         this.my_index = my_index;
     }
 
-    public String getCustomer_user_ID() {
-        return customer_user_ID;
+    public String getCustomer_user_index() {
+        return customer_user_index;
     }
 
-    public void setCustomer_user_ID(String customer_user_ID) {
-        this.customer_user_ID = customer_user_ID;
+    public void setCustomer_user_index(String customer_user_index) {
+        this.customer_user_index = customer_user_index;
     }
 
     public String getStart_date_time() {

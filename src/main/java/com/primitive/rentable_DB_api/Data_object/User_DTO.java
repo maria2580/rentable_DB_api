@@ -6,7 +6,7 @@ public class User_DTO {
     private String name;
     private String nickname;
     private String Address;
-    private String tel;
+    private String email;
     private String phone_num;
 
     public int getMy_index() {
@@ -49,12 +49,12 @@ public class User_DTO {
         Address = address;
     }
 
-    public String getTel() {
-        return tel;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone_num() {

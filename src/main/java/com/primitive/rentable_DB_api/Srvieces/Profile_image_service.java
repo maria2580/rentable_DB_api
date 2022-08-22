@@ -2,6 +2,8 @@ package com.primitive.rentable_DB_api.Srvieces;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +16,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-
+@Component
 public class Profile_image_service {
     DB_Connection_Data key=DB_Connection_Data.getInstance();
     String osName = System.getProperty("os.name").toLowerCase();
@@ -24,8 +26,15 @@ public class Profile_image_service {
     private final String DB_res = (osName.contains("win")?"D:\\\\rentable_images\\\\images":"/home/ubuntu/rentable_images/images");
 
 
+    @Autowired(required = false)
+    public void post_profile_image(String user_id, String encoded_image){
+        MultipartFile file = null;
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] bytes = decoder.decode(encoded_image);
+        try {
+            FileCopyUtils.copy(bytes, (File) file);//Todo 안될 수도
+        }catch (Exception e){e.printStackTrace();}
 
-    public void post_profile_image(String user_id, MultipartFile file){
         long now = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD-HH-mm-ss");
         String now_date_time= sdf.format(new Date(now));
@@ -53,10 +62,10 @@ public class Profile_image_service {
 
                 //마지막 인덱스값 구해옴
                 int idx;
-                ResultSet rs =con.createStatement().executeQuery("SELECT index FROM profile_images ORDER BY index DESC LIMIT 1;");
+                ResultSet rs =con.createStatement().executeQuery("SELECT idx FROM profile_images ORDER BY idx DESC LIMIT 1;");
                 rs.next();
                 try{
-                    idx = rs.getInt("index");
+                    idx = rs.getInt("idx");
                 }catch (Exception e) {
                     idx = 0;
                 }
@@ -68,14 +77,14 @@ public class Profile_image_service {
                     con.createStatement().execute(String.format("update profile_images set Path='%s' uploader_user_id='%s';",DBPath,user_id));
                 }else{
                     //DB에 데이터 자체가 없는 경우 - 열 추가
-                    con.createStatement().execute(String.format("insert profile_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,user_id,DBPath,now_date_time));
+                    con.createStatement().execute(String.format("insert profile_images (idx, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,user_id,DBPath,now_date_time));
                 }
                 con.close();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-    }
+    }@Autowired(required = false)
     public String get_profile_image(String user_id) throws IOException {
 
         String filePath = null;//DB에서 받아온 경로가 저장될 변수

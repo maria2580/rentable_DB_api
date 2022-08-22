@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@RestController
+@RequestMapping("")
 public class Items_DB_controller {
     @Autowired
     Item_image_service item_image_service;
@@ -42,6 +44,12 @@ public class Items_DB_controller {
         }
         return jsonObject.toJSONString();
     }
+    @GetMapping("items/by_desc/{item_amount}")
+    public Item[] get_items_by_desc(@PathVariable int item_amount){
+        Item[] items =item_db_service.get_items_by_desc(item_amount);
+
+        return items;
+    }
     @PostMapping("add/items/")//@modelattribute("key")
     public void post_item(@RequestBody Item item){
         Thread_post_item t = new Thread_post_item();
@@ -49,4 +57,5 @@ public class Items_DB_controller {
         t.start();
         return;
     }
+
 }

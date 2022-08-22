@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
+@RestController
+@RequestMapping("")
 public class profile_Image_controller {
     @Autowired
     Profile_image_service profile_image_service;
@@ -21,15 +23,11 @@ public class profile_Image_controller {
     }
     @PostMapping("add/images/profile/{user_id}")//@modelattribute("key")
     public void set_profile_image(@RequestParam String user_id, @RequestBody String encoded_image) throws IOException {
-        MultipartFile file = null;
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] bytes = decoder.decode(encoded_image);
-        FileCopyUtils.copy(bytes, (File) file);//Todo 체크 안해봄 안될 가능 성 있는 코드임
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                profile_image_service.post_profile_image(user_id,file);
+                profile_image_service.post_profile_image(user_id,encoded_image);
             }
         }.start();
         return;
