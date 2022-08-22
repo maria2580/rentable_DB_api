@@ -2,6 +2,8 @@ package com.primitive.rentable_DB_api.Srvieces;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-
+@Component
 public class Item_image_service {
     DB_Connection_Data key=DB_Connection_Data.getInstance();
     String osName = System.getProperty("os.name").toLowerCase();
@@ -23,7 +25,7 @@ public class Item_image_service {
     private final String sepD=osName.contains("win")?sep+sep:sep;//윈도우면 db에 저장할 때 \\\\로 보내야 \\으로 저장되고 다시 받아 올 때 \로 값이 옴.
     private final String uploadDir = (osName.contains("win")?"D:\\rentable_images\\images":"/home/ubuntu/rentable_images/images");//sep 이 / 인 경우 리눅스이며 구분자 중복 필요 없음
     private final String DB_res = (osName.contains("win")?"D:\\\\rentable_images\\\\images":"/home/ubuntu/rentable_images/images");
-
+    @Autowired(required = false)
     public String get_item_image(String item_index,int a) throws IOException {
 
         String filePath = null;//DB에서 받아온 경로가 저장될 변수
@@ -34,7 +36,7 @@ public class Item_image_service {
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
 
-            String query = String.format("SELECT * FROM item_images where related_item_index =%d ORDER BY index DESC LIMIT 1;",true,item_index);
+            String query = String.format("SELECT * FROM item_images where related_item_index =%d ORDER BY idx DESC LIMIT 1;",true,item_index);
             ResultSet rs =con.createStatement().executeQuery(query);
             if (rs.next()){
                 filePath=rs.getString("path");
@@ -58,7 +60,7 @@ public class Item_image_service {
 
         return encoded_image;
     }
-
+    @Autowired(required = false)
     public void post_item_image(int related_item_index, String[] encode_images) {
 
         MultipartFile[] file = null;
@@ -97,10 +99,10 @@ public class Item_image_service {
 
                     //마지막 인덱스값 구해옴
                     int idx;
-                    ResultSet rs =con.createStatement().executeQuery("SELECT index FROM item_images ORDER BY index DESC LIMIT 1;");
+                    ResultSet rs =con.createStatement().executeQuery("SELECT index FROM item_images ORDER BY idx DESC LIMIT 1;");
                     rs.next();
                     try{
-                        idx = rs.getInt("index");
+                        idx = rs.getInt("idx");
                     }catch (Exception e) {
                         idx = 0;
                     }
