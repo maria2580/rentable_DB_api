@@ -10,6 +10,16 @@ public class Item {
     private String reservation_table_name;
     private String comments_table_name;
     private String review_table_name;
+    private int appended_image_count;
+
+    public int getAppended_image_count() {
+        return appended_image_count;
+    }
+
+    public void setAppended_image_count(int appended_image_count) {
+        this.appended_image_count = appended_image_count;
+    }
+
     private String[] encodedImages;
 
     public String[] getEncodedImages() {

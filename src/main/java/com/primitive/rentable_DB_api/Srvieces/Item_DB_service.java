@@ -2,6 +2,7 @@ package com.primitive.rentable_DB_api.Srvieces;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
 import com.primitive.rentable_DB_api.Data_object.Item;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +11,11 @@ import java.sql.Statement;
 
 public class Item_DB_service {
     DB_Connection_Data key = DB_Connection_Data.getInstance();
+    @Autowired
+    Item_image_service item_image_service;
+
+
+
     public Item get_item(String related_item_index) {
         Item item = new Item();
 
@@ -25,6 +31,7 @@ public class Item_DB_service {
                 item.setOwners_user_id(rs.getString("owners_id"));
                 item.setTitle(rs.getString("title"));
                 item.setContent(rs.getString("content"));
+                item.setAppended_image_count(rs.getInt("appended_image_count"));
                 item.setUploaded_date_time(rs.getString("uploaded_date_time"));
                 item.setDeleted(rs.getBoolean("deleted"));
                 item.setReservation_table_name(rs.getString("reservation_table_name"));
@@ -35,6 +42,7 @@ public class Item_DB_service {
                 item.setOwners_user_id("");
                 item.setTitle("");
                 item.setContent("");
+                item.setAppended_image_count(0);
                 item.setUploaded_date_time("");
                 item.setDeleted(true);
                 item.setReservation_table_name("");
@@ -43,7 +51,11 @@ public class Item_DB_service {
             }
             con.close();
             //item.setEncodedImages();
-
+            String[] encoded_images=new String[item.getAppended_image_count()];
+            for (int i=0;i<item.getAppended_image_count(); i++) {
+                encoded_images[i]=item_image_service.get_item_image(related_item_index, i);
+            }
+            item.setEncodedImages(encoded_images);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -70,15 +82,17 @@ public class Item_DB_service {
                     " owners_user_id," +
                     " title," +
                     " content," +
+                    " appended_image_count," +
                     " uploaded_date_time," +
                     " is_deleted," +
                     " reservation_table_name," +
                     " comment_table_name," +
-                    " reviews_table_name ) values(%d,'%s','%s','%s', '%s', '%b', '%s', '%s', '%s');",
+                    " reviews_table_name ) values(%d,'%s','%s','%s', %d, '%s', %b, '%s', '%s', '%s');",
                     item.getMy_index(),
                     item.getOwners_user_id(),
                     item.getTitle(),
                     item.getContent(),
+                    item.getAppended_image_count(),
                     item.getUploaded_date_time(),
                     item.isDeleted(),
                     item.getReservation_table_name(),
@@ -88,6 +102,7 @@ public class Item_DB_service {
             con.createStatement().executeUpdate(query);
             con.close();
 
+            item_image_service.post_item_image(item.getMy_index(),item.getEncodedImages());
         }
         catch (Exception e ){e.printStackTrace();}
     }

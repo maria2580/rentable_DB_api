@@ -59,7 +59,16 @@ public class Item_image_service {
         return encoded_image;
     }
 
-    public void post_item_image(String related_item_index, MultipartFile[] file){
+    public void post_item_image(int related_item_index, String[] encode_images) {
+
+        MultipartFile[] file = null;
+        Base64.Decoder decoder= Base64.getDecoder();
+        try{
+            for (int i=0 ; i<encode_images.length;i++){
+                FileCopyUtils.copy(decoder.decode(encode_images[i]),(File)file[i]);
+            }
+        }catch (Exception e){e.printStackTrace();}
+
         long now = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD-HH-mm-ss");
         String now_date_time= sdf.format(new Date(now));
@@ -100,10 +109,10 @@ public class Item_image_service {
                     ResultSet rs2 =con.createStatement().executeQuery(query);
                     if(rs2.next()){
                         //DB에 값이 이미 들어있는 경우 - 수정
-                        con.createStatement().execute(String.format("update item_images set Path='%s' owners_user_id='%s';",DBPath,related_item_index));//Todo 5장올린사진 -> 4장으로 변경하는등의 동작은 따로 업데이트 메서드 만들어야함
+                        con.createStatement().execute(String.format("update item_images set Path='%s' where related_item_index='%s';",DBPath,related_item_index));//Todo 5장올린사진 -> 4장으로 변경하는등의 동작은 따로 업데이트 메서드 만들어야함
                     }else{
                         //DB에 데이터 자체가 없는 경우 - 열 추가
-                        con.createStatement().execute(String.format("insert item_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s');",idx+1,related_item_index,DBPath,now_date_time));
+                        con.createStatement().execute(String.format("insert item_images (index, owners_user_id, path, uploaded_date_time) values(%d,%s,'%s','%s');",idx+1,related_item_index,DBPath,now_date_time));
                     }
                     con.close();
                 }catch (Exception e){
