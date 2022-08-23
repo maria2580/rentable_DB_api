@@ -2,7 +2,7 @@ package com.primitive.rentable_DB_api.Data_object;
 
 public class Image {
     private int my_index;
-    private String uploader_user_id;
+    private String uploader_user_index;
     private String Path;
     private String uploaded_date_time;
     private boolean is_profile;
@@ -16,12 +16,12 @@ public class Image {
         this.my_index = my_index;
     }
 
-    public String getUploader_user_id() {
-        return uploader_user_id;
+    public String getUploader_user_index() {
+        return uploader_user_index;
     }
 
-    public void setUploader_user_id(String uploader_user_id) {
-        this.uploader_user_id = uploader_user_id;
+    public void setUploader_user_index(String uploader_user_index) {
+        this.uploader_user_index = uploader_user_index;
     }
 
     public String getPath() {

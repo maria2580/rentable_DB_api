@@ -1,6 +1,5 @@
 package com.primitive.rentable_DB_api.Cotrolers.DB_Controller;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.primitive.rentable_DB_api.Data_object.Item;
 import com.primitive.rentable_DB_api.Srvieces.Item_DB_service;
 import com.primitive.rentable_DB_api.Srvieces.Item_image_service;
@@ -9,9 +8,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("")
@@ -27,7 +23,7 @@ public class Items_DB_controller {
         JSONArray image_array = new JSONArray();
         if(!item.isDeleted()){
             jsonObject.put("my_index",item.getMy_index());
-            jsonObject.put("owners_id",item.getOwners_user_id());
+            jsonObject.put("owners_id",item.getOwners_user_index());
             jsonObject.put("uploaded_date_time",item.getUploaded_date_time());
             jsonObject.put("title",item.getTitle());
             jsonObject.put("content",item.getContent());

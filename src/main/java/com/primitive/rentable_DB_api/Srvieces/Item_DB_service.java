@@ -25,10 +25,10 @@ public class Item_DB_service {
             con.createStatement().execute("use " + key.getDBname());
 
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(String.format("select * from items where idx = %d",related_item_index));
+            ResultSet rs = stmt.executeQuery(String.format("select * from items_uploaded where idx = %d",related_item_index));
             if (rs.next()){
                 item.setMy_index(rs.getInt("idx"));
-                item.setOwners_user_id(rs.getString("owners_id"));
+                item.setOwners_user_index(rs.getString("owners_id"));
                 item.setTitle(rs.getString("title"));
                 item.setContent(rs.getString("content"));
                 item.setAppended_image_count(rs.getInt("appended_image_count"));
@@ -39,7 +39,7 @@ public class Item_DB_service {
                 item.setReview_table_name(rs.getString("review_table_name"));
             }else{
                 item.setMy_index(0);
-                item.setOwners_user_id("");
+                item.setOwners_user_index("");
                 item.setTitle("");
                 item.setContent("");
                 item.setAppended_image_count(0);
@@ -76,10 +76,10 @@ public class Item_DB_service {
             try{
                 last_idx= rs.getInt("idx");}catch (Exception e){last_idx=0;}
             System.out.println(last_idx+"to check arrived last idx value");
-            //index int, owners_user_id varchar(20),title varchar(80),content text, uploaded_date_time varchar(20),
+            //index int, owners_user_index varchar(20),title varchar(80),content text, uploaded_date_time varchar(20),
             //is_deleted boolean, reservation_table_name varchar(50), comment_table_name varchar(50), reviews_table_name varchar(50)
             String query = String.format("insert into items(idx," +
-                    " owners_user_id," +
+                    " owners_user_index," +
                     " title," +
                     " content," +
                     " appended_image_count," +
@@ -89,7 +89,7 @@ public class Item_DB_service {
                     " comment_table_name," +
                     " reviews_table_name ) values(%d,'%s','%s','%s', %d, '%s', %b, '%s', '%s', '%s');",
                     item.getMy_index(),
-                    item.getOwners_user_id(),
+                    item.getOwners_user_index(),
                     item.getTitle(),
                     item.getContent(),
                     item.getAppended_image_count(),
@@ -114,11 +114,11 @@ public class Item_DB_service {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
-            ResultSet rs= con.createStatement().executeQuery("select * from items_uploaded order by desc idx limit "+item_amount+";");
+            ResultSet rs= con.createStatement().executeQuery("select * from items_uploaded order by idx desc limit "+item_amount+";");
             for (int i = 0; rs.next();i++){
                 items[i]=new Item();
                 items[i].setMy_index(rs.getInt("idx"));
-                items[i].setOwners_user_id(rs.getString("owners_id"));
+                items[i].setOwners_user_index(rs.getString("owners_id"));
                 items[i].setTitle(rs.getString("title"));
                 items[i].setContent(rs.getString("content"));
                 items[i].setAppended_image_count(rs.getInt("appended_image_count"));

@@ -17,17 +17,17 @@ public class profile_Image_controller {
     Profile_image_service profile_image_service;
 
 
-    @GetMapping( value = "images/profile/{user_id}", produces = MediaType.IMAGE_JPEG_VALUE )
-    public String get_profile_image(@PathVariable String user_id) throws IOException {
-        return profile_image_service.get_profile_image(user_id);
+    @GetMapping( value = "images/profile/{user_index}", produces = MediaType.IMAGE_JPEG_VALUE )
+    public String get_profile_image(@PathVariable String user_index) throws IOException {
+        return profile_image_service.get_profile_image(user_index);
     }
-    @PostMapping("add/images/profile/{user_id}")//@modelattribute("key")
-    public void set_profile_image(@RequestParam String user_id, @RequestBody String encoded_image) throws IOException {
+    @PostMapping("add/images/profile/{user_index}")//@modelattribute("key")
+    public void set_profile_image(@RequestParam String user_index, @RequestBody String encoded_image) throws IOException {
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                profile_image_service.post_profile_image(user_id,encoded_image);
+                profile_image_service.post_profile_image(user_index,encoded_image);
             }
         }.start();
         return;

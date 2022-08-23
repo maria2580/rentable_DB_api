@@ -27,7 +27,7 @@ public class Profile_image_service {
 
 
     @Autowired(required = false)
-    public void post_profile_image(String user_id, String encoded_image){
+    public void post_profile_image(String user_index, String encoded_image){
         MultipartFile file = null;
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] bytes = decoder.decode(encoded_image);
@@ -40,7 +40,7 @@ public class Profile_image_service {
         String now_date_time= sdf.format(new Date(now));
         if (!file.isEmpty()) {
             final String suffix =file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            String filename =user_id+suffix;
+            String filename =user_index+suffix;
             String fullPath = uploadDir +sep+"profile"+sep+ filename;
             String DBPath= DB_res+sepD+"profile"+sepD+filename;
 
@@ -70,14 +70,14 @@ public class Profile_image_service {
                     idx = 0;
                 }
                 //경로 저장
-                String query = String.format("SELECT * FROM profile_images where owners_user_id='%s';",true,user_id);
+                String query = String.format("SELECT * FROM profile_images where owners_user_index='%s';",true,user_index);
                 ResultSet rs2 =con.createStatement().executeQuery(query);
                 if(rs2.next()){
                     //DB에 값이 이미 들어있는 경우 - 수정
-                    con.createStatement().execute(String.format("update profile_images set Path='%s' uploader_user_id='%s';",DBPath,user_id));
+                    con.createStatement().execute(String.format("update profile_images set Path='%s' uploader_user_index='%s';",DBPath,user_index));
                 }else{
                     //DB에 데이터 자체가 없는 경우 - 열 추가
-                    con.createStatement().execute(String.format("insert profile_images (idx, owners_user_id, path, uploaded_date_time) values(%d,'%s','%s');",idx+1,user_id,DBPath,now_date_time));
+                    con.createStatement().execute(String.format("insert profile_images (idx, owners_user_index, path, uploaded_date_time) values(%d,'%s','%s');",idx+1,user_index,DBPath,now_date_time));
                 }
                 con.close();
             }catch (Exception e){
@@ -85,7 +85,7 @@ public class Profile_image_service {
             }
         }
     }@Autowired(required = false)
-    public String get_profile_image(String user_id) throws IOException {
+    public String get_profile_image(String user_index) throws IOException {
 
         String filePath = null;//DB에서 받아온 경로가 저장될 변수
         FileInputStream in=null;//로컬에서 읽은 파일이 들어오는 변수
@@ -95,7 +95,7 @@ public class Profile_image_service {
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
 
-            String query = String.format("SELECT * FROM profile_images and owners_user_id='%s';",true,user_id);
+            String query = String.format("SELECT * FROM profile_images and owners_user_index='%s';",true,user_index);
             ResultSet rs =con.createStatement().executeQuery(query);
             if (rs.next()){
                 filePath=rs.getString("path");
