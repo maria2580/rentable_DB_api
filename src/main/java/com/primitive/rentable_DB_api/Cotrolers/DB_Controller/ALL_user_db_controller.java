@@ -1,16 +1,12 @@
 package com.primitive.rentable_DB_api.Cotrolers.DB_Controller;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
-import com.primitive.rentable_DB_api.Data_object.Item;
-import com.primitive.rentable_DB_api.Data_object.Items_DAO;
-import com.primitive.rentable_DB_api.Data_object.Reservation;
 import com.primitive.rentable_DB_api.Data_object.User_DTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("")

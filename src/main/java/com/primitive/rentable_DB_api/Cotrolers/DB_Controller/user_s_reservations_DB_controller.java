@@ -1,7 +1,6 @@
 package com.primitive.rentable_DB_api.Cotrolers.DB_Controller;
 
 import com.primitive.rentable_DB_api.Cotrolers.DB_Connection_Data;
-import com.primitive.rentable_DB_api.Data_object.Reservation;
 import com.primitive.rentable_DB_api.Data_object.Reservation_pointer;
 import org.springframework.web.bind.annotation.*;
 
