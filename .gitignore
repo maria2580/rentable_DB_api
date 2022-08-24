@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!**/src/main/java/com/primitive/rentable_DB_api/Cotrolers/DB_Controller/user_s_reservations_DB_controller.java
 
 ### STS ###
 .apt_generated

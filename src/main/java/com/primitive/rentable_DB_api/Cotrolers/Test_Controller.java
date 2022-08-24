@@ -1,6 +1,7 @@
 package com.primitive.rentable_DB_api.Cotrolers;
 
 import com.primitive.rentable_DB_api.Data_object.Items_DAO;
+import com.primitive.rentable_DB_api.Data_object.User_DTO;
 import com.primitive.rentable_DB_api.Data_object.Users_DAO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,10 @@ public class Test_Controller {
     Users_DAO users;
 
     private final DB_Connection_Data key = DB_Connection_Data.getInstance();
-
+    @GetMapping("usr")
+    public User_DTO prov(){
+        return new User_DTO();
+    }
     @GetMapping
     public String testController(){
         try {

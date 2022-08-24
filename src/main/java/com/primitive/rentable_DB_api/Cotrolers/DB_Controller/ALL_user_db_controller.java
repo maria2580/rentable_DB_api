@@ -48,18 +48,31 @@ public class ALL_user_db_controller {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
-            ResultSet rs = con.createStatement().executeQuery("select * from users where user_id="+user.getUser_ID()+";");
+            ResultSet rs = con.createStatement().executeQuery("select * from users where user_id='"+user.getUser_ID()+"';");
             if (rs.next()){
                 //이미 있는 사용자 아이디 명임
                 return "이미 사용 중인 아이디 입니다.";
             }
-            ResultSet rs2 = con.createStatement().executeQuery("select * from users where user_email="+user.getEmail()+";");
+            ResultSet rs2 = con.createStatement().executeQuery("select * from users where email='"+user.getEmail()+"';");
             if (rs2.next()){
                 //이미 입력 된 이메일임
                 return "이미 사용중인 이메일 입니다.";
             }
-            con.createStatement().execute(String.format("insert users key(idx,user_id,name,nickname,Address,email,phone_num) value(%d,'%s','%s','%s','%s','%s','%s')",
-                    user.getMy_index(),user.getUser_ID(),user.getName(),user.getNickname(),user.getAddress(),user.getEmail(),user.getPhone_num()));
+            ResultSet rs3 = con.createStatement().executeQuery("select * from users where nickname='"+user.getNickname()+"';");
+            if (rs3.next()){
+                //이미 사용중인 닉네임임
+                return "이미 사용중인 닉네임 입니다.";
+            }
+
+            ResultSet rs_l= con.createStatement().executeQuery("select * from users order by idx desc limit 1;");
+            int last_idx;
+            if (rs_l.next()){
+                last_idx= rs_l.getInt("idx");
+            }else {
+                last_idx=-1;
+            }
+            con.createStatement().execute(String.format("insert users (idx,user_id,name,nickname,Address,email,phone_num) values(%d,'%s','%s','%s','%s','%s','%s')",
+                    last_idx+1,user.getUser_ID(),user.getName(),user.getNickname(),user.getAddress(),user.getEmail(),user.getPhone_num()));
 
         }catch (Exception e){e.printStackTrace();}
         return "성공";
@@ -73,16 +86,22 @@ public class ALL_user_db_controller {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(key.getURL(), key.getDBuser(), key.getDBpw());
             con.createStatement().execute("use " + key.getDBname());
-            ResultSet rs = con.createStatement().executeQuery("select * from users where user_id="+user.getUser_ID()+";");
+            ResultSet rs = con.createStatement().executeQuery("select * from users where user_id= '"+user.getUser_ID()+"' ;");
             if (rs.next()){
                 //이미 있는 사용자 아이디 명임
                 return "이미 사용 중인 아이디 입니다.";
             }
-            ResultSet rs2 = con.createStatement().executeQuery("select * from users where user_email="+user.getEmail()+";");
+            ResultSet rs2 = con.createStatement().executeQuery("select * from users where email= '"+user.getEmail()+"';");
             if (rs2.next()){
                 //이미 입력 된 이메일임
                 return "이미 사용중인 이메일 입니다.";
             }
+            ResultSet rs3 = con.createStatement().executeQuery("select * from users where nickname='"+user.getNickname()+"';");
+            if (rs3.next()){
+                //이미 사용중인 닉네임임
+                return "이미 사용중인 닉네임 입니다.";
+            }
+
             con.createStatement().execute(String.format("update users set user_id='%s',  name ='%s', nickname='%s', address='%s', email ='%s', phone_num='%s " ,
                     user.getUser_ID(),user.getName(),user.getNickname(),user.getAddress(),user.getAddress(),user.getEmail(),user.getPhone_num())+"where idx="+user.getMy_index()+";");
         }catch (Exception e){e.printStackTrace();}

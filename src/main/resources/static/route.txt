@@ -1,0 +1,13 @@
+GET    3.35.84.108:8081/users/{user_index}
+POST   3.35.84.108:8081/add/users                  Body에 userDTO       반환 -> 정상, 아이디가 중복됨, 이메일이 중복됨
+PATCH  3.35.84.108:8081/edit/users/{user_index}    Body에 userDTO       반환 -> 정상, 아이디가 중복됨, 이메일이 중복됨
+DEL    3.35.84.108:8081/delete/users/{user_index}
+
+GET    3.35.84.108:8081/items/{related_item_index}                      반환 -> json 오브젝트로 itemDTO 보냄 base64 인코딩된 사진 보내줌.
+GET    3.35.84.108:8081/items/by_desc/{item_amount}                     반환 -> item_dto 객체 배열로 보내줌
+POST   3.35.84.108:8081/add/items/                                      반환 -> 딱히 없음
+GET    3.35.84.108:8081/images/profile/{user_index}                     반환 -> 베이스64 인코딩된 스트링 이미지
+POST   3.35.84.108:8081/add/images/profile/{user_index}                 반환 -> 딱히 없음
+GET    3.35.84.108:8081/reservation_list/{item_index}                   반환 -> Reservation[] 객체
+GET    3.35.84.108:8081/reservation_list/{item_index}/{reservation_idx} 반환 -> Reservation   객체
+GET    3.35.84.108:8081/reservation/user/{user_index}/                  반환 -> Reservation[] 객체
